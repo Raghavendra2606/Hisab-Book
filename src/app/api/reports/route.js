@@ -29,12 +29,9 @@ export async function GET(req) {
     if (startDate && endDate) {
       allAttendance = await db.getAttendanceRange(startDate, endDate);
     } else {
-      // If no range, default to last 30 days
-      const end = new Date().toISOString().split('T')[0];
-      const startObj = new Date();
-      startObj.setDate(startObj.getDate() - 30);
-      const start = startObj.toISOString().split('T')[0];
-      allAttendance = await db.getAttendanceRange(start, end);
+      // If no date range is specified, retrieve ALL attendance logs (lifetime)
+      // so that worker calculations (netPayable) evaluate current running balances accurately.
+      allAttendance = await db.getAttendanceRange('1970-01-01', '2099-12-31');
     }
 
     // Organize attendance by workerId

@@ -13,26 +13,53 @@ const FILE_PATHS = {
 
 // Ensure data directory exists for local fallback
 function ensureLocalDir() {
-  if (!fs.existsSync(DATA_DIR)) {
-    fs.mkdirSync(DATA_DIR, { recursive: true });
+  if (process.env.VERCEL && !process.env.MONGODB_URI) {
+    throw new Error(
+      "Missing MONGODB_URI. Local file storage fallback is not supported in the read-only serverless environment of Vercel. " +
+      "Please configure your MONGODB_URI environment variable in your Vercel Dashboard under Settings -> Environment Variables."
+    );
   }
-  Object.keys(FILE_PATHS).forEach(key => {
-    if (!fs.existsSync(FILE_PATHS[key])) {
-      fs.writeFileSync(FILE_PATHS[key], JSON.stringify([], null, 2));
+
+  try {
+    if (!fs.existsSync(DATA_DIR)) {
+      fs.mkdirSync(DATA_DIR, { recursive: true });
     }
-  });
+    Object.keys(FILE_PATHS).forEach(key => {
+      if (!fs.existsSync(FILE_PATHS[key])) {
+        fs.writeFileSync(FILE_PATHS[key], JSON.stringify([], null, 2));
+      }
+    });
+  } catch (error) {
+    console.error("Local file system is read-only or inaccessible:", error);
+    throw new Error(
+      "Read-only or inaccessible local filesystem. If you are deploying to a serverless platform like Vercel, " +
+      "you must configure MONGODB_URI in your environment variables to use MongoDB database storage."
+    );
+  }
 }
 
 // Local storage helper
 async function readLocalFile(key) {
   ensureLocalDir();
-  const data = await fs.promises.readFile(FILE_PATHS[key], 'utf-8');
-  return JSON.parse(data || '[]');
+  try {
+    const data = await fs.promises.readFile(FILE_PATHS[key], 'utf-8');
+    return JSON.parse(data || '[]');
+  } catch (error) {
+    console.error(`Failed to read local file for ${key}:`, error);
+    return [];
+  }
 }
 
 async function writeLocalFile(key, data) {
   ensureLocalDir();
-  await fs.promises.writeFile(FILE_PATHS[key], JSON.stringify(data, null, 2), 'utf-8');
+  try {
+    await fs.promises.writeFile(FILE_PATHS[key], JSON.stringify(data, null, 2), 'utf-8');
+  } catch (error) {
+    console.error(`Failed to write local file for ${key}:`, error);
+    throw new Error(
+      "Failed to write data to disk. If running on Vercel, please set MONGODB_URI in your Vercel project variables."
+    );
+  }
 }
 
 // Generate unique ID for local fallback
