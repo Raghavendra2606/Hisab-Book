@@ -27,7 +27,7 @@ export async function POST(req) {
     }
 
     const body = await req.json();
-    const { name, phone, role, dailyWage, joiningDate, status, site } = body;
+    const { name, phone, role, dailyWage, joiningDate, status, site, openingBalance } = body;
 
     if (!name || !role || dailyWage === undefined) {
       return NextResponse.json({ error: "Missing required fields: name, role, dailyWage" }, { status: 400 });
@@ -40,7 +40,8 @@ export async function POST(req) {
       dailyWage: Number(dailyWage),
       joiningDate: joiningDate || new Date().toISOString().split('T')[0],
       status: status || "Active",
-      site: site || "Main Site"
+      site: site || "Main Site",
+      openingBalance: openingBalance !== undefined ? Number(openingBalance) : 0
     });
 
     return NextResponse.json(worker, { status: 201 });

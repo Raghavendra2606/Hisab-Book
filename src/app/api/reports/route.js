@@ -83,7 +83,8 @@ export async function GET(req) {
         }
       });
 
-      const netPayable = totalEarned - totalPaid - totalAdvance;
+      const openingBalance = worker.openingBalance || 0;
+      const netPayable = openingBalance + totalEarned - totalPaid - totalAdvance;
 
       return {
         workerId: worker._id,
@@ -93,6 +94,7 @@ export async function GET(req) {
         dailyWage,
         status: worker.status,
         site: worker.site,
+        openingBalance,
         presentCount,
         halfDayCount,
         absentCount,

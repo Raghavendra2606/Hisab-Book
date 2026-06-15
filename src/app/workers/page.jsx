@@ -41,6 +41,7 @@ export default function WorkersPage() {
   const [joiningDate, setJoiningDate] = useState('');
   const [site, setSite] = useState('');
   const [status, setStatus] = useState('Active');
+  const [openingBalance, setOpeningBalance] = useState('0');
   
   const [submitLoading, setSubmitLoading] = useState(false);
   const [formError, setFormError] = useState('');
@@ -98,6 +99,7 @@ export default function WorkersPage() {
     if (sites.length > 0) setSite(sites[0].name);
     else setSite('Main Site');
     setStatus('Active');
+    setOpeningBalance('0');
     setFormError('');
     setIsModalOpen(true);
   };
@@ -112,6 +114,7 @@ export default function WorkersPage() {
     setJoiningDate(worker.joiningDate);
     setSite(worker.site || 'Main Site');
     setStatus(worker.status);
+    setOpeningBalance(worker.openingBalance || 0);
     setFormError('');
     setIsModalOpen(true);
   };
@@ -134,7 +137,8 @@ export default function WorkersPage() {
       dailyWage: Number(dailyWage),
       joiningDate,
       site,
-      status
+      status,
+      openingBalance: Number(openingBalance || 0)
     };
 
     try {
@@ -520,6 +524,22 @@ export default function WorkersPage() {
                     </select>
                   </div>
                 </div>
+
+                <div className="form-row">
+                  <div className="form-group" style={{ flexGrow: 1 }}>
+                    <label>Opening Balance / Due Amount (₹)</label>
+                    <input 
+                      type="number" 
+                      className="form-input" 
+                      value={openingBalance} 
+                      onChange={(e) => setOpeningBalance(e.target.value)} 
+                      placeholder="e.g. 5000 if you owe them, or -2000 if they owe you"
+                    />
+                    <small style={{ color: 'var(--text-muted)', fontSize: '11px', marginTop: '4px', display: 'block' }}>
+                      Enter a positive number if the contractor owes the worker wages. Enter a negative number if the worker owes an advance.
+                    </small>
+                  </div>
+                </div>
               </div>
               
               <div className="modal-footer">
@@ -635,6 +655,16 @@ export default function WorkersPage() {
                         </div>
                       </div>
 
+                      <div style={{ border: '1px solid var(--border)', borderRadius: '12px', padding: '12px', backgroundColor: 'var(--bg-app)', gridColumn: 'span 2' }}>
+                        <div style={{ fontSize: '12px', color: 'var(--text-muted)' }}>Opening Balance (Initial Dues)</div>
+                        <div style={{ fontSize: '18px', fontWeight: 700, marginTop: '2px', color: (drawerLedger.stats.openingBalance || 0) >= 0 ? 'var(--text-primary)' : 'var(--danger)' }}>
+                          ₹{Math.abs(drawerLedger.stats.openingBalance || 0).toLocaleString('en-IN')}
+                          <span style={{ fontSize: '11px', fontWeight: 500, color: 'var(--text-muted)', marginLeft: '6px' }}>
+                            {(drawerLedger.stats.openingBalance || 0) >= 0 ? '(Contractor owes worker)' : '(Worker owes contractor)'}
+                          </span>
+                        </div>
+                      </div>
+
                     </div>
 
                     {/* Net Dues banner */}
@@ -644,16 +674,18 @@ export default function WorkersPage() {
                         padding: '14px',
                         borderRadius: '12px',
                         border: '1px solid var(--border)',
-                        backgroundColor: drawerLedger.stats.netPayable >= 0 ? 'var(--success-bg)' : 'var(--danger-bg)',
-                        color: drawerLedger.stats.netPayable >= 0 ? 'var(--success)' : 'var(--danger)',
+                        backgroundColor: (drawerLedger.stats.netPayable || 0) >= 0 ? 'var(--success-bg)' : 'var(--danger-bg)',
+                        color: (drawerLedger.stats.netPayable || 0) >= 0 ? 'var(--success)' : 'var(--danger)',
                         display: 'flex',
                         justifyContent: 'space-between',
                         alignItems: 'center'
                       }}
                     >
-                      <span style={{ fontWeight: 600 }}>Net Payable Dues</span>
+                      <span style={{ fontWeight: 600 }}>
+                        {(drawerLedger.stats.netPayable || 0) >= 0 ? 'Net Wages Payable' : 'Advance Owed by Worker'}
+                      </span>
                       <strong style={{ fontSize: '20px', fontFamily: 'var(--font-mono)' }}>
-                        ₹{drawerLedger.stats.netPayable?.toLocaleString('en-IN') || 0}
+                        ₹{Math.abs(drawerLedger.stats.netPayable || 0).toLocaleString('en-IN')}
                       </strong>
                     </div>
                   </div>

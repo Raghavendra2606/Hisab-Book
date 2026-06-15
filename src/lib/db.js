@@ -101,7 +101,8 @@ const WorkerSchema = new mongoose.Schema({
   dailyWage: { type: Number, required: true },
   joiningDate: { type: String, required: true },
   status: { type: String, default: "Active" }, // Active, Inactive
-  site: { type: String, default: "Main Site" }
+  site: { type: String, default: "Main Site" },
+  openingBalance: { type: Number, default: 0 }
 }, { timestamps: true });
 
 const AttendanceSchema = new mongoose.Schema({
@@ -209,7 +210,8 @@ export const db = {
         ...workerData,
         joiningDate: workerData.joiningDate || new Date().toISOString().split('T')[0],
         status: workerData.status || "Active",
-        site: workerData.site || "Main Site"
+        site: workerData.site || "Main Site",
+        openingBalance: workerData.openingBalance !== undefined ? Number(workerData.openingBalance) : 0
       };
       workers.push(newWorker);
       await writeLocalFile('workers', workers);
