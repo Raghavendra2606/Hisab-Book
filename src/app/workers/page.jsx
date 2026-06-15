@@ -435,7 +435,7 @@ export default function WorkersPage() {
 
       {/* ADD/EDIT WORKER MODAL DIALOG */}
       {isModalOpen && (
-        <div className="modal-overlay">
+        <div className="modal-overlay modal-scrollable">
           <div className="modal-content">
             <div className="modal-header">
               <h3 className="card-title">{modalMode === 'create' ? "Add New Worker" : "Edit Worker Profile"}</h3>

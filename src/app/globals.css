@@ -500,7 +500,12 @@ a {
   align-items: center;
   justify-content: center;
   z-index: 1000;
-  padding: 16px;
+}
+
+/* Scrollable overlay variation specifically for modals taller than the viewport */
+.modal-overlay.modal-scrollable {
+  align-items: flex-start; /* Prevents flex center cutoff when content height exceeds screen height */
+  padding: 40px 16px;
   overflow-y: auto;
 }
 
@@ -516,8 +521,7 @@ a {
 }
 
 @media (max-width: 600px) {
-  .modal-overlay {
-    align-items: flex-start;
+  .modal-overlay.modal-scrollable {
     padding: 24px 16px;
   }
   .modal-content {
