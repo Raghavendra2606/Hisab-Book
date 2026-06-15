@@ -1,0 +1,18 @@
+[
+  {
+    "_id": "5qnk403wbwebwcpqa7p2jw",
+    "workerId": "m5q0cattq6ikwbpjtygz",
+    "date": "2026-06-16",
+    "status": "Half Day",
+    "site": "Main Site",
+    "notes": ""
+  },
+  {
+    "_id": "u07owsv7fpswxpk9qbmmd8",
+    "workerId": "m5q0cattq6ikwbpjtygz",
+    "date": "2026-06-15",
+    "status": "Present",
+    "site": "",
+    "notes": ""
+  }
+]

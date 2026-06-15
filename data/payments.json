@@ -1,0 +1,12 @@
+[
+  {
+    "_id": "gy7wtxx1emwpetk1s9spz",
+    "workerId": "m5q0cattq6ikwbpjtygz",
+    "date": "2026-06-15",
+    "amount": 400,
+    "type": "Salary Paid",
+    "paymentMode": "UPI",
+    "site": "Main Site",
+    "notes": ""
+  }
+]
