@@ -501,6 +501,7 @@ a {
   justify-content: center;
   z-index: 1000;
   padding: 16px;
+  overflow-y: auto;
 }
 
 .modal-content {
@@ -512,6 +513,17 @@ a {
   box-shadow: var(--shadow-lg);
   overflow: hidden;
   animation: modalSlide 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@media (max-width: 600px) {
+  .modal-overlay {
+    align-items: flex-start;
+    padding: 24px 16px;
+  }
+  .modal-content {
+    margin-top: 10px;
+    margin-bottom: 80px; /* Leave room above bottom mobile nav bar */
+  }
 }
 
 @keyframes modalSlide {
