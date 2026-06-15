@@ -325,15 +325,24 @@ export default function ReportsPage() {
           <div className="metric-footer">Outstanding extra money disbursed</div>
         </div>
 
-        <div className="metric-card" style={{ '--accent': 'var(--info)' }}>
+        <div className="metric-card" style={{ 
+          '--accent': summary.netOutstanding >= 0 ? 'var(--info)' : 'var(--success)' 
+        }}>
           <div className="metric-header">
-            <span>Net Dues Outstanding</span>
-            <div className="metric-icon-box" style={{ backgroundColor: 'var(--info-bg)', color: 'var(--info)' }}>
+            <span>{summary.netOutstanding >= 0 ? 'Net Dues Outstanding' : 'Net Advances Owed'}</span>
+            <div className="metric-icon-box" style={{ 
+              backgroundColor: summary.netOutstanding >= 0 ? 'var(--info-bg)' : 'var(--success-bg)', 
+              color: summary.netOutstanding >= 0 ? 'var(--info)' : 'var(--success)' 
+            }}>
               <TrendingUp size={18} />
             </div>
           </div>
-          <div className="metric-value">₹{summary.netOutstanding.toLocaleString('en-IN')}</div>
-          <div className="metric-footer">Total contractor liability outstanding</div>
+          <div className="metric-value">₹{Math.abs(summary.netOutstanding).toLocaleString('en-IN')}</div>
+          <div className="metric-footer">
+            {summary.netOutstanding >= 0 
+              ? 'Total contractor liability outstanding' 
+              : 'Wages prepaid / outstanding advances'}
+          </div>
         </div>
       </div>
 

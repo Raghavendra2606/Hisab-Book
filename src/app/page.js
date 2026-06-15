@@ -150,17 +150,27 @@ export default function DashboardPage() {
         </div>
 
         {/* Net Liability */}
-        <div className="metric-card" style={{ '--accent': 'var(--danger)', '--accent-bg': 'var(--danger-bg)' }}>
+        <div className="metric-card" style={{ 
+          '--accent': summary.netOutstanding >= 0 ? 'var(--danger)' : 'var(--success)', 
+          '--accent-bg': summary.netOutstanding >= 0 ? 'var(--danger-bg)' : 'var(--success-bg)' 
+        }}>
           <div className="metric-header">
-            <span>Net Payable Balance</span>
-            <div className="metric-icon-box" style={{ backgroundColor: 'var(--danger-bg)', color: 'var(--danger)' }}>
+            <span>{summary.netOutstanding >= 0 ? 'Net Wages Payable' : 'Net Advances Owed'}</span>
+            <div className="metric-icon-box" style={{ 
+              backgroundColor: summary.netOutstanding >= 0 ? 'var(--danger-bg)' : 'var(--success-bg)', 
+              color: summary.netOutstanding >= 0 ? 'var(--danger)' : 'var(--success)' 
+            }}>
               <TrendingUp size={18} />
             </div>
           </div>
-          <div className="metric-value" style={{ color: summary.netOutstanding >= 0 ? 'var(--success)' : 'var(--danger)' }}>
-            ₹{summary.netOutstanding.toLocaleString('en-IN')}
+          <div className="metric-value" style={{ color: summary.netOutstanding >= 0 ? 'var(--danger)' : 'var(--success)' }}>
+            ₹{Math.abs(summary.netOutstanding).toLocaleString('en-IN')}
           </div>
-          <div className="metric-footer">Pending contractor wages to pay</div>
+          <div className="metric-footer">
+            {summary.netOutstanding >= 0 
+              ? 'Pending contractor wages to pay' 
+              : 'Wages prepaid / outstanding advances'}
+          </div>
         </div>
 
       </div>
